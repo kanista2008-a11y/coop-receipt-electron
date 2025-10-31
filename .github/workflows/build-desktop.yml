@@ -1,0 +1,55 @@
+name: Build Desktop Installers (Win + Mac)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'app/**'
+      - 'main.js'
+      - 'preload.js'
+      - 'package.json'
+      - 'build/**'
+      - '.github/workflows/build-desktop.yml'
+
+jobs:
+  # --- Windows .exe ---
+  win:
+    name: Windows (.exe)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Build (unsigned)
+        run: |
+          setx CSC_IDENTITY_AUTO_DISCOVERY false
+          npx electron-builder --win nsis
+      - name: Upload artifact (.exe)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Coop-Receipt-Windows
+          path: dist/*.exe
+
+  # --- macOS .dmg ---
+  mac:
+    name: macOS (.dmg)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Build (unsigned)
+        run: |
+          export CSC_IDENTITY_AUTO_DISCOVERY=false
+          npx electron-builder --mac dmg
+      - name: Upload artifact (.dmg)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Coop-Receipt-macOS
+          path: dist/*.dmg
