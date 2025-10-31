@@ -1,0 +1,51 @@
+{
+  "name": "coop-receipt-app",
+  "version": "1.0.0",
+  "description": "แอปออกใบเสร็จสหกรณ์โรงเรียนวัดอ้อมน้อย (Electron)",
+  "author": "Kanista + ChatGPT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis",
+    "dist:mac": "electron-builder --mac dmg"
+  },
+  "devDependencies": {
+    "electron": "30.0.9",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "th.school.watomnoi.coopreceipt",
+    "productName": "ใบเสร็จสหกรณ์โรงเรียน",
+    "files": [
+      "main.js",
+      "preload.js",
+      "app/**",
+      "build/**"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "Coop-Receipt-${version}-mac.${ext}"
+    },
+    "dmg": {
+      "backgroundColor": "#ffffff"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "Coop-Receipt-${version}-win.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
